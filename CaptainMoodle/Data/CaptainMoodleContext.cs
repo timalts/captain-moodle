@@ -17,5 +17,7 @@ namespace CaptainMoodle.Data
         public DbSet<Admin> Admin { get; set; }
 
         public DbSet<Faculty> Faculty { get; set; }
+
+        public DbSet<Student> Student { get; set; }
     }
 }
