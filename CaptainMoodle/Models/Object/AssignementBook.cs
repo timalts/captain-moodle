@@ -7,6 +7,7 @@ namespace Models.Object
 {
     public class AssignementBook
     {
+        public int Id { get; set; }
         public List<Assignement> Assignements {get; set;}
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Account
 {
-    public class Student
+    public class Student : User
     {
         public string FirstName { get; set; }
 

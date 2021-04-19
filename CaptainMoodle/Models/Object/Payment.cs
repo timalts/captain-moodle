@@ -7,6 +7,7 @@ namespace Models
 {
     public class Payment
     {
+        public int Id { get; set; }
         public int Amount {get; set;}
         public string Semester {get; set;}
         public bool Paid {get; set;}

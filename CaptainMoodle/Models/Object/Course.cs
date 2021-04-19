@@ -7,6 +7,7 @@ namespace Models.Object
 {
     public class Course
     {
+        public int Id { get; set; }
         public User Creator { get; set; }
         public string Description {get; set; }
         public List<Assignement> Assignements {get; set; }
