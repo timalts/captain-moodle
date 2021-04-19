@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6G7KF5qPiHIEledX4+TO1zFqa7T31DHnTxgWHDgayHZSpgWctETMGY8HZs5EKunPMxtotj7ScAA8O1O1hE3X3A==",
+  "dgSpecHash": "Uy7WWhAMLS+RPF4FxE1Nry3ofhgCrXahUu6rLhQ7kMVfut7S2l+KD+CEjlfY1orJem9BH/2djd3Jm8QEN1Q1Tg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\emeri\\source\\repos\\CaptaineMoodle\\CaptaineMoodle\\CaptaineMoodle.csproj",
+  "projectFilePath": "C:\\Users\\emeri\\Documents\\oop\\captain-moodle\\CaptaineMoodle\\CaptaineMoodle.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\emeri\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\emeri\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.5\\microsoft.aspnetcore.cryptography.internal.5.0.5.nupkg.sha512",
