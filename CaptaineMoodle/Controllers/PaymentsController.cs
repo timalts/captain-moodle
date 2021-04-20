@@ -57,7 +57,7 @@ namespace CaptaineMoodle.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Amount,Semester,Paid")] Payment payment)
+        public async Task<IActionResult> Create([Bind("Id, User, Amount,Semester,Paid")] Payment payment)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace CaptaineMoodle.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,Semester,Paid")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, User, Amount,Semester,Paid")] Payment payment)
         {
             if (id != payment.Id)
             {
