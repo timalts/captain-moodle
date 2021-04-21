@@ -9,22 +9,31 @@ using CaptaineMoodle.Areas.Identity.Data;
 using CaptaineMoodle.Models;
 using Microsoft.AspNetCore.Authorization;
 using CaptaineMoodle.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace CaptaineMoodle.Controllers
 {
     [AllowAnonymous]
     public class PaymentsController : Controller
     {
-        private readonly AuthDbContext _context;
 
-        public PaymentsController(AuthDbContext context)
+        private readonly AuthDbContext _context;
+        private readonly UserManager<User> _userManager;
+
+        //Method to get the current login user
+        public PaymentsController(AuthDbContext context, UserManager<User> userManager) 
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
         // GET: Payments
         public async Task<IActionResult> Index()
         {
+            //var payments = await _context.Payment.FindAsync(usr.Id);
             return View(await _context.Payment.ToListAsync());
         }
 
@@ -51,16 +60,18 @@ namespace CaptaineMoodle.Controllers
         {
             return View();
         }
-
+        private readonly IHttpContextAccessor _httpContextAccessor;
         // POST: Payments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Amount,Semester,Paid")] Payment payment)
+        public async Task<IActionResult> Create([Bind("Id, User, Amount,Semester,Paid")] Payment payment, ClaimsPrincipal principal)
         {
             if (ModelState.IsValid)
             {
+                var current_User = _userManager.GetUserAsync(HttpContext.User).Result;
+                payment.User = current_User;
                 _context.Add(payment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -89,7 +100,7 @@ namespace CaptaineMoodle.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,Semester,Paid")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,User, Amount,Semester,Paid")] Payment payment)
         {
             if (id != payment.Id)
             {
