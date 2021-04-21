@@ -1,4 +1,4 @@
-using CaptaineMoodle.Areas.Identity.Data;
+using CaptaineMoodle.Data;
 using CaptaineMoodle.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -37,10 +36,10 @@ namespace CaptaineMoodle
             services.AddDbContext<AuthDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("AuthDbContextConnection")));
+            
 
-
-
-
+            
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
