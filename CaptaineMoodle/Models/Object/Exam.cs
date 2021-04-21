@@ -7,6 +7,7 @@ namespace CaptaineMoodle.Models
 {
     public class Exam
     {
+        public int Id { get; set; }
         public Course Course { get; set; }
 
         public int UserId { get; set; }

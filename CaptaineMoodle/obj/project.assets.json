@@ -6094,20 +6094,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tim\\.nuget\\packages\\": {}
+    "C:\\Users\\natha\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tim\\Documents\\Github\\captain-moodle\\CaptaineMoodle\\CaptaineMoodle.csproj",
+      "projectUniqueName": "C:\\Users\\natha\\OneDrive\\Documents\\GitHub\\captain-moodle\\CaptaineMoodle\\CaptaineMoodle.csproj",
       "projectName": "CaptaineMoodle",
-      "projectPath": "C:\\Users\\Tim\\Documents\\Github\\captain-moodle\\CaptaineMoodle\\CaptaineMoodle.csproj",
-      "packagesPath": "C:\\Users\\Tim\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Tim\\Documents\\Github\\captain-moodle\\CaptaineMoodle\\obj\\",
+      "projectPath": "C:\\Users\\natha\\OneDrive\\Documents\\GitHub\\captain-moodle\\CaptaineMoodle\\CaptaineMoodle.csproj",
+      "packagesPath": "C:\\Users\\natha\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\natha\\OneDrive\\Documents\\GitHub\\captain-moodle\\CaptaineMoodle\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Tim\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\natha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
