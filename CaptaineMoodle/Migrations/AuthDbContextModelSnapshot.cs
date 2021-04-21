@@ -100,7 +100,12 @@ namespace CaptaineMoodle.Migrations
                     b.Property<string>("Semester")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payment");
                 });
@@ -234,6 +239,15 @@ namespace CaptaineMoodle.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CaptaineMoodle.Models.Payment", b =>
+                {
+                    b.HasOne("CaptaineMoodle.Areas.Identity.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

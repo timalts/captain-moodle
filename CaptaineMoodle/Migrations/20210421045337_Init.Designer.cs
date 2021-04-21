@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CaptaineMoodle.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20210419163253_Initial-Create")]
-    partial class InitialCreate
+    [Migration("20210421045337_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -102,7 +102,12 @@ namespace CaptaineMoodle.Migrations
                     b.Property<string>("Semester")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payment");
                 });
@@ -236,6 +241,15 @@ namespace CaptaineMoodle.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CaptaineMoodle.Models.Payment", b =>
+                {
+                    b.HasOne("CaptaineMoodle.Areas.Identity.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
