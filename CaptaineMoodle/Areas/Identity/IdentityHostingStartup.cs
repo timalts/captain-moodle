@@ -1,5 +1,6 @@
 ﻿using System;
 using CaptaineMoodle.Areas.Identity.Data;
+using CaptaineMoodle.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -17,16 +18,13 @@ namespace CaptaineMoodle.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                /*services.AddDbContext<AuthDbContext>(options =>
+                services.AddDbContext<AuthDbContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("AuthDbContextConnection")));*/
+                        context.Configuration.GetConnectionString("AuthDbContextConnection")));
 
                 services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                    .AddEntityFrameworkStores<AuthDbContext>()
-                    .AddRoles<IdentityRole>()
-                    .AddDefaultTokenProviders();
-                //services.AddScoped<SignInManager<User>, SignInManager<User>>();
-
+                    .AddEntityFrameworkStores<AuthDbContext>();
+                
                 //Policy service for require login all over the app
                 /*services.AddMvc(option =>
                 {
