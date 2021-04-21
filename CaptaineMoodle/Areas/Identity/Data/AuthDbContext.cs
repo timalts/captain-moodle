@@ -7,19 +7,18 @@ using CaptaineMoodle.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
-namespace CaptaineMoodle.Data
+namespace CaptaineMoodle.Areas.Identity.Data
 {
     public class AuthDbContext : IdentityDbContext<User>
     {
-        public AuthDbContext(DbContextOptions<AuthDbContext> options)
-            : base(options)
+        public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
         {
 
-            
 
         }
         public DbSet<Payment> Payment { get; set; }
+
+        public DbSet<Course> Course { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
