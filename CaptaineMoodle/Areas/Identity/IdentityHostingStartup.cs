@@ -20,7 +20,8 @@ namespace CaptaineMoodle.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<AuthDbContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("AuthDbContextConnection")));
+                        context.Configuration.GetConnectionString("AuthDbContextConnection")),
+             ServiceLifetime.Transient);
 
                 services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddEntityFrameworkStores<AuthDbContext>();
