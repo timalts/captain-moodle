@@ -12,6 +12,7 @@ using CaptaineMoodle.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using System.Collections.Specialized;
 
 namespace CaptaineMoodle.Controllers
 {
@@ -68,14 +69,22 @@ namespace CaptaineMoodle.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id, User, Amount,Semester,Paid")] Payment payment, ClaimsPrincipal principal)
         {
-            if (ModelState.IsValid)
+            if (User.IsInRole("Admin") && ModelState.IsValid)
+            {
+                var nvc = Request.Form;
+                string user_post = nvc["User"];
+                var sameUser = _userManager.Users.FirstOrDefault(u => u.Id == user_post);
+                System.Diagnostics.Debug.WriteLine("User is: " + sameUser.Email);
+                payment.User = sameUser;
+            }
+            else if (User.IsInRole("Student") && ModelState.IsValid)
             {
                 var current_User = _userManager.GetUserAsync(HttpContext.User).Result;
                 payment.User = current_User;
-                _context.Add(payment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
+            _context.Add(payment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
             return View(payment);
         }
 
