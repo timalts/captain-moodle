@@ -8,8 +8,8 @@
 }
 @if (User.Identity.IsAuthenticated)
 {
-    //@if (User.IsInRole("Student"))
-    //{
+    @if (User.IsInRole("Student"))
+    {
         <h1>Create</h1>
 
         <h4>Payment</h4>
@@ -43,9 +43,9 @@
         <div>
             <a asp-action="Index">Back to List</a>
         </div>
-    //}
-    //else if (User.IsInRole("Admin"))
-    /*{
+    }
+    else if (User.IsInRole("Admin"))
+    {
         <h1>Create</h1>
 
         <h4>Payment</h4>
@@ -60,9 +60,9 @@
                         <span asp-validation-for="Amount" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="UserId" class="control-label"></label>
-                        <input asp-for="UserId" class="form-control" />
-                        <span asp-validation-for="UserId" class="text-danger"></span>
+                        <label asp-for="User" class="control-label"></label>
+                        <input asp-for="User" class="form-control" />
+                        <span asp-validation-for="User" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Semester" class="control-label"></label>
@@ -88,8 +88,8 @@
     else
     {
         <p>This section is not available for Teachers.</p>
-    }*/
 
+    }
 }
 else
 {
