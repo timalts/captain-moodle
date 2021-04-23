@@ -69,13 +69,17 @@ namespace CaptaineMoodle.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id, User, Amount,Semester,Paid")] Payment payment, ClaimsPrincipal principal)
         {
+            var users = await _userManager.Users.ToListAsync();
+            SelectList list = new SelectList(users);
+            ViewBag.Users = list;
             if (User.IsInRole("Admin") && ModelState.IsValid)
             {
                 var nvc = Request.Form;
                 string user_post = nvc["User"];
-                var sameUser = _userManager.Users.FirstOrDefault(u => u.Id == user_post);
-                System.Diagnostics.Debug.WriteLine("User is: " + sameUser.Email);
-                payment.User = sameUser;
+                //system.diagnostics.debug.writeline(user_post);
+                var sameuser = _userManager.Users.FirstOrDefault(u => u.Email == user_post);
+                //system.diagnostics.debug.writeline("user is: " + sameuser.email);
+                payment.User = sameuser;
             }
             else if (User.IsInRole("Student") && ModelState.IsValid)
             {
