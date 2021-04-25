@@ -37,12 +37,6 @@ namespace CaptaineMoodle
             /*services.AddDbContext<AuthDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("AuthDbContextConnection")));*/
-            
-            services.AddTransient<AuthDbContext>();
-
-
-
-
 
         }
 
@@ -68,7 +62,7 @@ namespace CaptaineMoodle
             app.UseAuthentication();
             app.UseAuthorization();
 
-            Seed.SeedData(userManager, roleManager);
+            //Seed.SeedData(userManager, roleManager);
 
             app.UseEndpoints(endpoints =>
             {

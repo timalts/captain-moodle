@@ -8,8 +8,8 @@
 }
 @if (User.Identity.IsAuthenticated)
 {
-    //@if (User.IsInRole("Student"))
-    //{
+    @if (User.IsInRole("Student"))
+    {
         <h1>Create</h1>
 
         <h4>Payment</h4>
@@ -22,47 +22,6 @@
                         <label asp-for="Amount" class="control-label"></label>
                         <input asp-for="Amount" class="form-control" />
                         <span asp-validation-for="Amount" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Semester" class="control-label"></label>
-                        <input asp-for="Semester" class="form-control" />
-                        <span asp-validation-for="Semester" class="text-danger"></span>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="Paid" /> @Html.DisplayNameFor(model => model.Paid)
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div>
-            <a asp-action="Index">Back to List</a>
-        </div>
-    //}
-    //else if (User.IsInRole("Admin"))
-    /*{
-        <h1>Create</h1>
-
-        <h4>Payment</h4>
-        <hr />
-        <div class="row">
-            <div class="col-md-4">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="Amount" class="control-label"></label>
-                        <input asp-for="Amount" class="form-control" />
-                        <span asp-validation-for="Amount" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="UserId" class="control-label"></label>
-                        <input asp-for="UserId" class="form-control" />
-                        <span asp-validation-for="UserId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Semester" class="control-label"></label>
@@ -85,11 +44,52 @@
             <a asp-action="Index">Back to List</a>
         </div>
     }
+    else if (User.IsInRole("Admin"))
+    {
+        <h1>Create</h1>
+
+        <h4>Payment</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Amount" class="control-label"></label>
+                        <input asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="User" class="control-label"></label>
+                        @Html.DropDownList("User", new SelectList(UserManager.Users), "Select User", new { @class = "form-control" })
+                    </div>                   
+                    <div class="form-group">
+                        <label asp-for="Semester" class="control-label"></label>
+                        <input asp-for="Semester" class="form-control" />
+                        <span asp-validation-for="Semester" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Paid" /> 
+                            @Html.DisplayNameFor(model => model.Paid)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    }
     else
     {
         <p>This section is not available for Teachers.</p>
-    }*/
 
+    }
 }
 else
 {
