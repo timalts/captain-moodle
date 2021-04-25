@@ -68,37 +68,115 @@ namespace CaptaineMoodle.Controllers
             {
                 _context.Add(course);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListCourses));
             }
-            return View(course);
+            return RedirectToAction(nameof(ListCourses));
         }
+
+        public ActionResult SuscribeCourse(int Id)
+        {
+            return View();
+        }
+
+        
 
 
         // GET: Courses/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var course = await _context.Course.FindAsync(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return View(course);  
         }
 
         // POST: Courses/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id ,[Bind("Id,Name,CreatorId,Description,UsersId,Start,End")] Course course)
         {
-            try
+            if (id != course.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    _context.Update(course);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CourseExists(course.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(ListCourses));
             }
+            return RedirectToAction(nameof(ListCourses));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Suscribe(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            User usr = await GetCurrentUserAsync();
+
+            var course = await _context.Course.FindAsync(id);
+
+            course.UsersId += usr.Id + ";";
+            _context.Course.Update(course);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ListCourses));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UnSuscribe(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            User usr = await GetCurrentUserAsync();
+
+            var course = await _context.Course.FindAsync(id);
+
+            course.UsersId = course.UsersId.Replace(usr.Id + ";", "");
+            _context.Course.Update(course);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ListCourses));
         }
 
         // GET: Courses/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = await _context.Course
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return View(course);
         }
 
         // POST: Payments/Delete/5
@@ -110,6 +188,10 @@ namespace CaptaineMoodle.Controllers
             _context.Course.Remove(course);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(ListCourses));
+        }
+        private bool CourseExists(int id)
+        {
+            return _context.Course.Any(e => e.Id == id);
         }
     }
 }

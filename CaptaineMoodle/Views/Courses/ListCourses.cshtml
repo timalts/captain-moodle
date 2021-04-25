@@ -1,6 +1,11 @@
-﻿@using CaptaineMoodle.Models
+﻿@using CaptaineMoodle.Areas.Identity.Data
+@using CaptaineMoodle.Models
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<User> UserManager
 
 @model IEnumerable<Course>
+
 
 @{
     ViewBag.Title = "All Courses";
@@ -10,15 +15,17 @@
 
 @if(Model.Any())
 {
-    @if(User.IsInRole("teacher") || User.IsInRole("admin") )
+    @if(User.IsInRole("Teacher") || User.IsInRole("Admin") )
     {
     <a class="btn btn-primary mb-3" style="width:auto" asp-action="createcourse"
        asp-controller="courses">Add new course</a>
     }
 
-    foreach (var course in Model)
+foreach (var course in Model)
     {
-        <div class="card mb-3">
+        if (User.IsInRole("Admin") || User.IsInRole("Student") || @course.CreatorId == (@UserManager.GetUserId(User)))
+        {
+            <div class="card mb-3">
             <div class="card-header">
                 Course name : @course.Name
             </div>
@@ -28,20 +35,35 @@
                 <h5 class="card-title">Course end: @course.End</h5>
             </div>
 
-            @if(User.IsInRole("student"))
-            {
-                <div class="card-footer">
-                <a asp-controller="courses" asp-action="suscribe" asp-route-id="@course.Id" class="btn btn-primary">Suscribe</a>
-                </div>
+            @if(User.IsInRole("Student"))
+            {  
+                @if(!@course.UsersId.Contains(@UserManager.GetUserId(User)+";"))
+                {
+                    @using (Html.BeginForm("Suscribe", "Courses", new { Id = @course.Id }, FormMethod.Post))
+                        {
+                            <button class="btn btn-primary m-3">Subscribe</button>
+
+                        }
+                }
+                else
+                {
+                    @using (Html.BeginForm("UnSuscribe", "Courses", new { Id = @course.Id }, FormMethod.Post))
+                        {
+                            <button class="btn btn-danger m-3">Unsubscribe</button>
+                        }
+                }
+
             }
             else
             {
                 <div class="card-footer">
-                <a asp-controller="courses" asp-action="EditCourse" asp-route-id="@course.Id" class="btn btn-primary">Edit</a>
+                <a asp-controller="courses" asp-action="Edit" asp-route-id="@course.Id" class="btn btn-primary">Edit</a>
+                <a asp-controller="courses" asp-action="Delete" asp-route-id="@course.Id" class="btn btn-danger">Delete</a>
                 </div>
             }
            
         </div>
+        }
     }
 }
 else
