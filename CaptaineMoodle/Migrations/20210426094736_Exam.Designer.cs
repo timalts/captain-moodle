@@ -4,14 +4,16 @@ using CaptaineMoodle.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CaptaineMoodle.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426094736_Exam")]
+    partial class Exam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,7 +172,7 @@ namespace CaptaineMoodle.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "cc54b4cf-5e4d-4f3b-b421-bb6767d19231",
+                            ConcurrencyStamp = "afc9bd29-b77d-4e38-a048-f3f7827a0eef",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
