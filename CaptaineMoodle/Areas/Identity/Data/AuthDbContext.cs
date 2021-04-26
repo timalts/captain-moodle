@@ -23,6 +23,8 @@ namespace CaptaineMoodle.Data
 
         public DbSet<Course> Course { get; set; }
 
+        public DbSet<Course> Exam { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
