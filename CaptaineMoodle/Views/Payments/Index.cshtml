@@ -9,7 +9,9 @@
 @* User is logged in*@
 @if (User.Identity.IsAuthenticated)
 {
-    <h1>Index</h1>
+    @if (User.IsInRole("Student"))
+    {
+<h1>Index</h1>
     <p>
         <a asp-action="Create">Create New</a>
     </p>
@@ -57,6 +59,57 @@
                     </tr>}}
         </tbody>
     </table>
+    }
+    else if (User.IsInRole("Admin"))
+    {
+        <h1>Index</h1>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Semester)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Paid)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+             <tr>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Amount)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => UserManager.FindByIdAsync(item.UserId).Result.Email)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Semester)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Paid)
+                 </td>
+                 <td>
+                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                 </td>
+             </tr>}
+        </tbody>
+    </table>
+    }
+
 }
 @* User isn't logged in*@
 else { 

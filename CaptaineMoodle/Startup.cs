@@ -1,4 +1,5 @@
 using CaptaineMoodle.Areas.Identity.Data;
+using CaptaineMoodle.Data;
 using CaptaineMoodle.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -34,17 +34,14 @@ namespace CaptaineMoodle
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddDbContext<AuthDbContext>(options =>
+            /*services.AddDbContext<AuthDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("AuthDbContextConnection")));
-
-
-
+                    Configuration.GetConnectionString("AuthDbContextConnection")));*/
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -65,6 +62,8 @@ namespace CaptaineMoodle
             app.UseAuthentication();
             app.UseAuthorization();
 
+            //Seed.SeedData(userManager, roleManager);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -72,6 +71,9 @@ namespace CaptaineMoodle
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            
+
         }
     }
 }

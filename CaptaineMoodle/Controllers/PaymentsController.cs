@@ -1,13 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CaptaineMoodle.Areas.Identity.Data;
 using CaptaineMoodle.Models;
 using Microsoft.AspNetCore.Authorization;
+using CaptaineMoodle.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using System.Collections.Specialized;
 
 namespace CaptaineMoodle.Controllers
 {
@@ -64,14 +69,26 @@ namespace CaptaineMoodle.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id, User, Amount,Semester,Paid")] Payment payment, ClaimsPrincipal principal)
         {
-            if (ModelState.IsValid)
+            var users = await _userManager.Users.ToListAsync();
+            SelectList list = new SelectList(users);
+            ViewBag.Users = list;
+            if (User.IsInRole("Admin") && ModelState.IsValid)
+            {
+                var nvc = Request.Form;
+                string user_post = nvc["User"];
+                //system.diagnostics.debug.writeline(user_post);
+                var sameuser = _userManager.Users.FirstOrDefault(u => u.Email == user_post);
+                //system.diagnostics.debug.writeline("user is: " + sameuser.email);
+                payment.User = sameuser;
+            }
+            else if (User.IsInRole("Student") && ModelState.IsValid)
             {
                 var current_User = _userManager.GetUserAsync(HttpContext.User).Result;
                 payment.User = current_User;
-                _context.Add(payment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
+            _context.Add(payment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
             return View(payment);
         }
 
