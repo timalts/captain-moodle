@@ -62,7 +62,7 @@ namespace CaptaineMoodle
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //Seed.SeedData(userManager, roleManager);
+            Seed.SeedData(userManager, roleManager);
 
             app.UseEndpoints(endpoints =>
             {

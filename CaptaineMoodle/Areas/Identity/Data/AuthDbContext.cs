@@ -23,7 +23,9 @@ namespace CaptaineMoodle.Data
 
         public DbSet<Course> Course { get; set; }
 
-        public DbSet<Course> Exam { get; set; }
+        public DbSet<Exam> Exam { get; set; }
+
+        public DbSet<Assignement> Assignement { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
