@@ -1,0 +1,40 @@
+﻿@{ ViewData["Title"] = "Home Page"; }
+
+<script src="~/js/daypilot/daypilot-all.min.js" asp-append-version="true"></script>
+<link href="icons/style.css" rel="stylesheet" type="text/css">
+
+<div class="wrap">
+    <div class="left">
+        <div id="nav"></div>
+    </div>
+    <div class="right">
+        <div id="dp"></div>
+    </div>
+</div>
+
+<script>
+
+    var nav = new DayPilot.Navigator("nav");
+
+    nav.showMonths = 1;
+    nav.skipMonths = 1;
+    nav.selectMode = "week";
+    nav.onTimeRangeSelected = function (args) {
+        dp.startDate = args.day;
+        dp.update();
+        dp.events.load("/api/events");
+    };
+    nav.init();
+
+
+    var dp = new DayPilot.Calendar("dp");
+    dp.viewType = "Week";
+    dp.businessBeginsHour = 7;
+    dp.businessEndsHour = 22;
+    dp.heightSpec = "BusinessHoursNoScroll";
+
+    dp.init();
+
+    dp.events.load("/api/events");
+
+</script>
