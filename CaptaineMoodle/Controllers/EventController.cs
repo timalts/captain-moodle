@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using CaptaineMoodle.Areas.Identity.Data;
 using CaptaineMoodle.Data;
 using CaptaineMoodle.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CaptaineMoodle.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Events")]
     public class EventsController : Controller
@@ -29,6 +31,7 @@ namespace CaptaineMoodle.Controllers
 
         // GET: api/Events
         [HttpGet]
+        [Authorize(Roles = "Admin, Teacher, Student")]
         public async Task<IEnumerable<Event>> GetEvents([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
             User usr = await GetCurrentUserAsync();
