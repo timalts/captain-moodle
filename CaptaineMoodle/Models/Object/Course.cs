@@ -17,5 +17,10 @@ namespace CaptaineMoodle.Models
         public string UsersId { get; set; }
         public DateTime Start {get; set; }
         public DateTime End {get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

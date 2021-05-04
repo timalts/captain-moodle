@@ -114,6 +114,35 @@ namespace CaptaineMoodle.Migrations
                     b.ToTable("Course");
                 });
 
+            modelBuilder.Entity("CaptaineMoodle.Models.Exam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("Exam");
+                });
+
             modelBuilder.Entity("CaptaineMoodle.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -170,7 +199,7 @@ namespace CaptaineMoodle.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "cc54b4cf-5e4d-4f3b-b421-bb6767d19231",
+                            ConcurrencyStamp = "5b1a4bd4-ca74-4d40-9c53-17a14d7cad67",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -278,6 +307,17 @@ namespace CaptaineMoodle.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CaptaineMoodle.Models.Exam", b =>
+                {
+                    b.HasOne("CaptaineMoodle.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("CaptaineMoodle.Models.Payment", b =>

@@ -1,5 +1,120 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model ExamCourseViewModel
+
+@using CaptaineMoodle.Areas.Identity.Data
+@using Microsoft.AspNetCore.Identity
+@using CaptaineMoodle.ViewModels
+
+@inject UserManager<User> UserManager
+
+@{ ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+@if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Teacher") || User.IsInRole("Student") || User.IsInRole("Admin"))
+    {
+        <h1>Index</h1>
+
+        @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+        {
+            <p>
+                <a asp-action="Create" asp-controller="exam">Create New</a>
+            </p>
+        }
+        <tbody>
+            @if (User.IsInRole("Teacher"))
+            {
+                @if (Model.examCourseList.Any())
+                {
+                    @foreach (var item in Model.examCourseList)
+                    {
+                        @if (item.exam.CreatorId == (@UserManager.GetUserId(User)))
+                        {
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Course name : @item.course.Name
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Description: @item.exam.Description</h5>
+                                    <h5 class="card-title"> Course start: @item.exam.Start</h5>
+                                    <h5 class="card-title">Course end: @item.exam.End</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <a asp-action="Edit" asp-route-id="@item.exam.Id">Edit</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.exam.Id">Delete</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <p>There is no exam</p>
+                }
+            }
+            else if (User.IsInRole("Admin"))
+            {
+                @if (Model.examCourseList.Any())
+                {
+                    @foreach (var item in Model.examCourseList)
+                    {
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                Course name : @item.course.Name
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Description: @item.exam.Description</h5>
+                                <h5 class="card-title"> Course start: @item.exam.Start</h5>
+                                <h5 class="card-title">Course end: @item.exam.End</h5>
+                            </div>
+                            <div class="card-footer">
+                                <a asp-action="Edit" asp-route-id="@item.exam.Id">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.exam.Id">Delete</a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>There is no exam</p>
+                }
+            }
+            else
+            {
+                @if (Model.examCourseList.Any())
+                {
+                    @foreach (var item in Model.examCourseList)
+                    {
+                        @if (item.course.UsersId.Contains(@UserManager.GetUserId(User) + ";"))
+                        {
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Course name : @item.course.Name
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Description: @item.exam.Description</h5>
+                                    <h5 class="card-title"> Course start: @item.exam.Start</h5>
+                                    <h5 class="card-title">Course end: @item.exam.End</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <a asp-action="Edit" asp-route-id="@item.exam.Id">Edit</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.exam.Id">Delete</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <p>There is no exam</p>
+                }
+            }
+
+
+        </tbody>
+    }
+}
+else
+{
+    <p>Not logged in.</p>
 }
