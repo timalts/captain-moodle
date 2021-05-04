@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace CaptaineMoodle.Controllers
 {
+    [Authorize]
     public class CoursesController : Controller
     {
         public readonly AuthDbContext _context;
@@ -29,6 +30,7 @@ namespace CaptaineMoodle.Controllers
 
 
         // GET: Courses
+        [Authorize(Roles = "Admin, Teacher, Student")]
         public ActionResult ListCourses()
         {
             var courses = from c in _context.Course select c;
@@ -38,6 +40,7 @@ namespace CaptaineMoodle.Controllers
         }
 
         // GET: Courses/Details/5
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Get_ByUsersId()
         {
 
@@ -49,6 +52,7 @@ namespace CaptaineMoodle.Controllers
         }
 
         // GET: Courses/Create
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult CreateCourse()
         {
             return View();
@@ -56,6 +60,7 @@ namespace CaptaineMoodle.Controllers
 
         // POST: Courses/Create
         [HttpPost]
+        [Authorize(Roles = "Admin, Teacher")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCourse([Bind("Name,Description,Start,End")] Course course)
         {
@@ -73,6 +78,7 @@ namespace CaptaineMoodle.Controllers
             return RedirectToAction(nameof(ListCourses));
         }
 
+        [Authorize(Roles = "Student")]
         public ActionResult SuscribeCourse(int Id)
         {
             return View();
@@ -82,6 +88,7 @@ namespace CaptaineMoodle.Controllers
 
 
         // GET: Courses/Edit/5
+        [Authorize(Roles = "Admin, Teacher")]
         public async Task<IActionResult> Edit(int id)
         {
             var course = await _context.Course.FindAsync(id);
@@ -94,6 +101,7 @@ namespace CaptaineMoodle.Controllers
 
         // POST: Courses/Edit/5
         [HttpPost]
+        [Authorize(Roles = "Admin, Teacher")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id ,[Bind("Id,Name,CreatorId,Description,UsersId,Start,End")] Course course)
         {
@@ -126,6 +134,7 @@ namespace CaptaineMoodle.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> Suscribe(int id)
         {
             if (id == null)
@@ -144,6 +153,7 @@ namespace CaptaineMoodle.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> UnSuscribe(int id)
         {
             if (id == null)
@@ -162,6 +172,7 @@ namespace CaptaineMoodle.Controllers
         }
 
         // GET: Courses/Delete/5
+        [Authorize(Roles = "Admin, Teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -181,6 +192,7 @@ namespace CaptaineMoodle.Controllers
 
         // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin, Teacher")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -189,6 +201,8 @@ namespace CaptaineMoodle.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(ListCourses));
         }
+
+        [Authorize(Roles = "Admin, Teacher, Student")]
         private bool CourseExists(int id)
         {
             return _context.Course.Any(e => e.Id == id);

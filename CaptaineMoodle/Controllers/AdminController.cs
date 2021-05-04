@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CaptaineMoodle.Controllers
 {
-    //[Authorize(Roles ="admin")]
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
