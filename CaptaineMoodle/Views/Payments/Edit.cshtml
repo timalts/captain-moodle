@@ -17,6 +17,7 @@
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="UserId" />
                 <div class="form-group">
                     <label asp-for="Amount" class="control-label"></label>
                     <input asp-for="Amount" class="form-control" />
@@ -53,6 +54,8 @@ else if (User.IsInRole("Admin"))
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="UserId" />
+
                 <div class="form-group">
                     <label asp-for="Amount" class="control-label"></label>
                     <input asp-for="Amount" class="form-control" />
