@@ -113,7 +113,7 @@ namespace CaptaineMoodle.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,User, Amount,Semester,Paid")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, UserId, Amount,Semester,Paid")] Payment payment)
         {
             if (id != payment.Id)
             {
@@ -146,6 +146,7 @@ namespace CaptaineMoodle.Controllers
         // GET: Payments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            System.Diagnostics.Debug.WriteLine("Delte is here");
             if (id == null)
             {
                 return NotFound();
@@ -157,8 +158,9 @@ namespace CaptaineMoodle.Controllers
             {
                 return NotFound();
             }
-
-            return View(payment);
+            _context.Payment.Remove(payment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Payments/Delete/5
