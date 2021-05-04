@@ -1,6 +1,8 @@
 ﻿using CaptaineMoodle.Areas.Identity.Data;
 using CaptaineMoodle.Data;
 using CaptaineMoodle.Models;
+using CaptaineMoodle.ViewModels.ExamViewModels;
+using CaptaineMoodle.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,7 @@ namespace CaptaineMoodle.Controllers
     {
         public readonly AuthDbContext _context;
         private readonly UserManager<User> _userManager;
+        private object examCourseViewModel;
 
         public ExamController(AuthDbContext context, UserManager<User> userManager)
         {
@@ -28,25 +31,68 @@ namespace CaptaineMoodle.Controllers
         // GET: Exam
         public ActionResult Index()
         {
-            var exam = from c in _context.Exam select c;
+            var exams = from c in _context.Exam select c;
+            var model = new ExamCourseViewModel();
+            if (exams.Any())
+            {
+                foreach (var _exam in exams)
+                {
+                    var _course = _context.Course.Find(_exam.CourseId);
+                    var examCourse = new ExamCourseModel
+                    {
+                        exam = _exam,
+                        course = _course,
+                    };
 
+                    model.examCourseList.Add(examCourse);
+                }
 
-            return View(exam);
+                return View(model);
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
+        public ActionResult Create()
+        {
+            var courses = from c in _context.Course select c;
+            //var model = new ExamListCourseViewModel();
+            //model.exam = new Exam();
+
+            if (courses.Any())
+            {
+                /*foreach(var course in courses)
+                {
+                    model.listCourse.Add(course);
+                }*/
+                ViewBag.courses = courses;
+                return View();
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: Exam/CreateExam
-        // Besoin d'un menu déroulant par ID.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateExam([Bind("CourseId,Description,start,End")] Exam exam)
+        public async Task<IActionResult> Create([Bind("Id,Course,Description,Start,End")] Exam exam)
         {
             User usr = await GetCurrentUserAsync();
             exam.CreatorId = usr.Id;
-            var course = await _context.Course.FindAsync(exam.CourseId);
-            exam.UsersId = course.UsersId;
+
+            var nvc = Request.Form;
+            string user_post = nvc["Course"];
+
+            var sameuser = _context.Course.FirstOrDefault(u => u.Name == user_post);
+            exam.Course = sameuser;
 
             _context.Add(exam);
             await _context.SaveChangesAsync();
+            
             return (RedirectToAction(nameof(Index)));
         }
 
@@ -56,15 +102,21 @@ namespace CaptaineMoodle.Controllers
             {
                 return NotFound();
             }
-
             var exam = await _context.Exam
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var course = await _context.Course
+                .FirstOrDefaultAsync(m => m.Id == exam.CourseId);
             if (exam == null)
             {
                 return NotFound();
             }
+            ExamCourseModel examCourse = new ExamCourseModel()
+            {
+                exam = exam,
+                course = course,
+            };
 
-            return View(exam);
+            return View(examCourse);
         }
 
         // POST: Exam/Delete/5
@@ -90,7 +142,14 @@ namespace CaptaineMoodle.Controllers
             {
                 return NotFound();
             }
-            return View(exam);
+            var course = await _context.Course
+                .FirstOrDefaultAsync(m => m.Id == exam.CourseId);
+            ExamCourseModel examCourse = new ExamCourseModel()
+            {
+                exam = exam,
+                course = course,
+            };
+            return View(examCourse);
         }
 
         // POST: Courses/Edit/5
