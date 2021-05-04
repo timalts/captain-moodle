@@ -8,6 +8,8 @@ using CaptaineMoodle.Areas.Identity.Data;
 using CaptaineMoodle.Data;
 using CaptaineMoodle.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using CaptaineMoodle.Models.Object;
 
 namespace CaptaineMoodle.Controllers
 {
@@ -61,6 +63,7 @@ namespace CaptaineMoodle.Controllers
             {
                 char[] separators = new char[] { ' ', ';' };
                 string[] users = course.UsersId.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                User teacher = await GetCurrentUserAsync();
 
                 foreach (var user in users)
                 {
@@ -69,7 +72,8 @@ namespace CaptaineMoodle.Controllers
                         CourseId = assignement.CourseId,
                         Description = assignement.Description,
                         Grade = assignement.Grade,
-                        StudentId = user
+                        StudentId = user,
+                        TeacherId = teacher.Id
                     };
 
                     _context.Add(_assignement);
@@ -85,45 +89,96 @@ namespace CaptaineMoodle.Controllers
         }
 
         // GET: AssignementController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var assignement = await _context.Assignement.FindAsync(id);
+            if ( assignement == null)
+            {
+                return NotFound();
+            }
+            return View(assignement);
+
         }
 
         // POST: AssignementController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CourseId,Description,StudentId,TeacherId,Grade")] Assignement assignement)
         {
-            try
+            string student = assignement.StudentId;
+            if (id != assignement.Id)
             {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    assignement.StudentId = student;
+                    _context.Update(assignement);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+
+                    if (!AssignementExists(assignement.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AssignementController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var _asssignement = await _context.Assignement
+                .FirstOrDefaultAsync(m => m.Id == id);
+            var _course = await _context.Course
+                .FirstOrDefaultAsync(m => m.Id == _asssignement.CourseId);
+            if (_asssignement == null)
+            {
+                return NotFound();
+            }
+            AssignementCoursModel assignementCours = new AssignementCoursModel()
+            {
+                assignement = _asssignement,
+                course = _course,
+            };
+
+            return View(assignementCours);
         }
 
-        // POST: AssignementController/Delete/5
-        [HttpPost]
+        // POST: Exam/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var assignement = await _context.Assignement.FindAsync(id);
+            _context.Assignement.Remove(assignement);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        private bool ExamExists(int id)
+        {
+            return _context.Exam.Any(e => e.Id == id);
+        }
+
+
+        private bool AssignementExists(int id)
+        {
+            return _context.Assignement.Any(e => e.Id == id);
         }
     }
 }

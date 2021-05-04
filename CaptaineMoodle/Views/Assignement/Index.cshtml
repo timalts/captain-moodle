@@ -1,6 +1,102 @@
-﻿@using CaptaineMoodle.Models
+﻿@using CaptaineMoodle.Areas.Identity.Data
+@using CaptaineMoodle.Models
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<User> UserManager
 
 @model IEnumerable<Assignement>
 
-<a class="btn btn-primary mb-3" style="width:auto" asp-action="create"
-asp-controller="assignement">Add new assignement</a>
+@{
+    ViewBag.Title = "All Assignement";
+}
+
+<h1>All Assignement</h1>
+
+@if (Model.Any())
+{
+    @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+    {
+        <a class="btn btn-primary mb-3" style="width:auto" asp-action="create"
+           asp-controller="assignement">Add new assignement</a>
+    }
+    bool teacher = false;
+
+    foreach (var assignement in Model)
+    {
+        if (@assignement.TeacherId == (@UserManager.GetUserId(User)) && !teacher)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Course)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.StudentId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Grade)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Course)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => UserManager.FindByIdAsync(item.StudentId).Result.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Grade)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+}
+                </tbody>
+            </table>
+            teacher = true;
+        }
+        if (User.IsInRole("Student") && assignement.StudentId == UserManager.GetUserId(User))
+        {
+            string studentname = UserManager.FindByIdAsync(assignement.StudentId).Result.UserName;
+            <div class="card mb-3">
+                <div class="card-header">
+                    Assignement name : @assignement.Course
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Description: @assignement.Description</h5>
+                    <h5 class="card-title"> Grade: @assignement.Grade</h5>
+                    <h5 class="card-title"> Student: @studentname</h5>
+                </div>
+
+                @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                {
+                    <div class="card-footer">
+                        <a asp-controller="assignement" asp-action="edit" asp-route-id="@assignement.Id" class="btn btn-primary">Edit</a>
+                        <a asp-controller="assignement" asp-action="delete" asp-route-id="@assignement.Id" class="btn btn-danger">Delete</a>
+                    </div>
+
+                }
+
+
+            </div>
+        }
+    }
+}
+
+
+
+

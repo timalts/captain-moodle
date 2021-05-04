@@ -1,3 +1,4 @@
+using CaptaineMoodle.Areas.Identity.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,5 +16,6 @@ namespace CaptaineMoodle.Models
         public string Description { get; set; }
         public string Grade { get; set; }
         public string StudentId { get; set; }
+        public string TeacherId { get; set; }
     }
 }

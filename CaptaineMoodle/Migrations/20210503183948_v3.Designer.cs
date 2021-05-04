@@ -4,14 +4,16 @@ using CaptaineMoodle.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CaptaineMoodle.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210503183948_v3")]
+    partial class v3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,12 +105,14 @@ namespace CaptaineMoodle.Migrations
                     b.Property<string>("StudentId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TeacherId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("TeacherIdId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("TeacherIdId");
 
                     b.ToTable("Assignement");
                 });
@@ -229,7 +233,7 @@ namespace CaptaineMoodle.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "63c1f0fe-1c73-4e89-aa8d-df86980e379f",
+                            ConcurrencyStamp = "8371733f-4f70-49a7-835c-0274a06b56cb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -347,7 +351,13 @@ namespace CaptaineMoodle.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CaptaineMoodle.Areas.Identity.Data.User", "TeacherId")
+                        .WithMany()
+                        .HasForeignKey("TeacherIdId");
+
                     b.Navigation("Course");
+
+                    b.Navigation("TeacherId");
                 });
 
             modelBuilder.Entity("CaptaineMoodle.Models.Payment", b =>
