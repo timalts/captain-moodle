@@ -16,6 +16,7 @@ using System.Collections.Specialized;
 
 namespace CaptaineMoodle.Controllers
 {
+    [Authorize(Roles = "Admin, Student")]
     [AllowAnonymous]
     public class PaymentsController : Controller
     {
