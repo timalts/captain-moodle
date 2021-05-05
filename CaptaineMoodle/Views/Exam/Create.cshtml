@@ -14,65 +14,58 @@
 {
     @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
     {
-        @if (User.IsInRole("Teacher"))
+
+        if (@ViewBag.courses != null)
         {
-            if (@ViewBag.courses != null)
-            {
-                @foreach (var course in @ViewBag.courses)
-                {
-                    if (course.CreatorId != (@UserManager.GetUserId(User)))
-                    {
-                        @ViewBag.courses.Remove(course);
-                    }
-                }
-            }
-            else
-            {
-                <p>There is no course</p>
-            }
+            <h1>Create</h1>
 
-        }
-        <h1>Create</h1>
-
-        <h4>Exam</h4>
-        <hr />
-        <div class="row">
-            <div class="col-md-4">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="CourseId" class="control-label"></label>
-                        @Html.DropDownList("Course", new SelectList(@ViewBag.courses), "Select course", new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Description" class="control-label"></label>
-                        <input asp-for="Description" class="form-control" />
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Start" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-10">
-                            <input asp-for="Start" class="form-control" placeholder="Start">
-                            <span asp-validation-for="Start" class="text-danger"></span>
+            <h4>Exam</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="CourseId" class="control-label"></label>
+                            @Html.DropDownList("Course", new SelectList(@ViewBag.courses), "Select course", new { @class = "form-control" })
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="End" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-10">
-                            <input asp-for="End" class="form-control" placeholder="Start">
-                            <span asp-validation-for="End" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
-                    </div>
-                </form>
+                        <div class="form-group row">
+                            <label asp-for="Start" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="Start" class="form-control" placeholder="Start">
+                                <span asp-validation-for="Start" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="End" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="End" class="form-control" placeholder="Start">
+                                <span asp-validation-for="End" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
 
-        <div>
-            <a asp-action="Index">Back to List</a>
-        </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        }
+        else
+        {
+            <p>There is no course</p>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        }
     }
     else
     {
