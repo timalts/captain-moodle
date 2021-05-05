@@ -52,7 +52,7 @@ namespace CaptaineMoodle.Controllers
             else
             {
                  courses = _context.Course.Where(c => c.UsersId.Contains(usr.Id));
-                 exams = _context.Exam.Where(c => c.UsersId.Contains(usr.Id));
+                 exams = _context.Exam.Where(c => c.Course.UsersId.Contains(usr.Id));
             }
             
             List<Event> events = new List<Event>();
