@@ -31,6 +31,8 @@ namespace CaptaineMoodle.Controllers
         public ActionResult Index()
         {
             var assignements = _context.Assignement.ToList();
+            IEnumerable<Course> courses = from c in _context.Course select c;
+            ViewBag.courses = courses;
 
             return View(assignements);
         }
@@ -42,8 +44,21 @@ namespace CaptaineMoodle.Controllers
         }
 
         // GET: AssignementController/Create
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            IEnumerable<Course> courses;
+            var usr = await GetCurrentUserAsync();
+
+            if(User.IsInRole("Admin"))
+            {
+                courses = from c in _context.Course select c;
+            }
+            else
+            {
+                courses = _context.Course.Where(c => c.CreatorId == usr.Id);
+            }
+            ViewBag.courses = courses;
+
             return View();
         }
 
@@ -55,31 +70,33 @@ namespace CaptaineMoodle.Controllers
         // POST: AssignementController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("CourseId,Description,Grade")] Assignement assignement)
+        public async Task<ActionResult> Create([Bind("Id,Course,Description,Grade")] Assignement assignement)
         {
-            var course = await _context.Course.FindAsync(assignement.CourseId);
-
-            if(course.UsersId != "")
-            {
-                char[] separators = new char[] { ' ', ';' };
-                string[] users = course.UsersId.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                 User teacher = await GetCurrentUserAsync();
+                var nvc = Request.Form;
+                string user_post = nvc["Course"];
 
-                foreach (var user in users)
-                {
-                    var _assignement = new Assignement
+                var sameuser = _context.Course.FirstOrDefault(u => u.Name == user_post);
+                assignement.Course = sameuser;
+
+            char[] separators = new char[] { ' ', ';' };
+            string[] users = assignement.Course.UsersId.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            if (assignement.Course.UsersId != "")
+            {
+                    foreach (var user in users)
                     {
-                        CourseId = assignement.CourseId,
-                        Description = assignement.Description,
-                        Grade = assignement.Grade,
-                        StudentId = user,
-                        TeacherId = teacher.Id
-                    };
+                        Assignement _assignement = new Assignement();
+                        _assignement.Course = assignement.Course;
+                        _assignement.Description = assignement.Description;
+                        _assignement.Grade = assignement.Grade;
+                        _assignement.TeacherId = teacher.Id;
+                        _assignement.StudentId = user;
 
-                    _context.Add(_assignement);
-                    await _context.SaveChangesAsync();
-                }
-
+                        _context.Add(_assignement);
+                        await _context.SaveChangesAsync();
+                    }
+                    
                 return RedirectToAction(nameof(Index));
             }
             else
