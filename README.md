@@ -4,13 +4,13 @@ A clone of Moodle created in ASP.NET for the OOP Course at Dorset College.
 
 ## Features
 
-  - Student / Admin / Teacher Authentication System
+  - Complete user authentication system
   - Payments
   - Courses
   - Attendance
   - Exams
   - Assignments
-  - Timetable for Course & Exam
+  - Timetable for courses & exams
 
 ## Test it
 
