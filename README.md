@@ -12,7 +12,7 @@ A clone of Moodle created in ASP.NET for the OOP Course at Dorset College.
   - Assignments
   - Timetable for Course & Exam
 
-## Usage
+## Test it
 
 ```bash
 dotnet watch run
