@@ -14,6 +14,4 @@ A clone of Moodle created in ASP.NET for the OOP Course at Dorset College.
 
 ## Test it
 
-```bash
-dotnet watch run
-```
+Update your local database using the NuGet Package Manager and then run: `dotnet watch run`.
