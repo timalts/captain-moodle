@@ -1,6 +1,6 @@
 # Captain Moodle
 
-A clone of Moodle created in ASP.NET for the OOP Course at Dorset College.
+A clone of Moodle created in ASP.NET.
 
 ## Features
 
