@@ -52,8 +52,8 @@ namespace CaptaineMoodle.Controllers
             else
             {
                  courses = _context.Course.Where(c => c.UsersId.Contains(usr.Id));
-                 exams = _context.Exam.Where(c => c.Course.UsersId.Contains(usr.Id));
-            }
+                exams = _context.Exam;
+          }
             
             List<Event> events = new List<Event>();
 
@@ -73,21 +73,49 @@ namespace CaptaineMoodle.Controllers
                 }
             }
 
-            foreach (var exam in exams)
+            if (await _userManager.IsInRoleAsync(usr, "Student"))
             {
-                if (exam.Start >= start && exam.End <= end)
+                foreach(var course in courses)
                 {
-                    var course = await _context.Course.FindAsync(exam.CourseId);
-
-                    var _event = new Event
+                    exams = _context.Exam.Where(c => c.CourseId == course.Id);
+                    foreach (var exam in exams)
                     {
-                        Start = exam.Start,
-                        End = exam.End,
-                        Text = course.Name+Environment.NewLine+Environment.NewLine+exam.Description,
-                        Color = "Yellow"
-                    };
+                        if (exam.Start >= start && exam.End <= end)
+                        {
+                            var _course = await _context.Course.FindAsync(exam.CourseId);
 
-                    events.Add(_event);
+                            var _event = new Event
+                            {
+                                Start = exam.Start,
+                                End = exam.End,
+                                Text = _course.Name + Environment.NewLine + Environment.NewLine + exam.Description,
+                                Color = "Yellow"
+                            };
+
+                            events.Add(_event);
+                        }
+                    }
+                }
+                
+            }
+            else
+            {
+                foreach (var exam in exams)
+                {
+                    if (exam.Start >= start && exam.End <= end)
+                    {
+                        var course = await _context.Course.FindAsync(exam.CourseId);
+
+                        var _event = new Event
+                        {
+                            Start = exam.Start,
+                            End = exam.End,
+                            Text = course.Name + Environment.NewLine + Environment.NewLine + exam.Description,
+                            Color = "Yellow"
+                        };
+
+                        events.Add(_event);
+                    }
                 }
             }
             return events;
