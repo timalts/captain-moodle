@@ -55,25 +55,21 @@ namespace CaptaineMoodle.Controllers
             }
         }
 
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            var courses = from c in _context.Course select c;
-            //var model = new ExamListCourseViewModel();
-            //model.exam = new Exam();
+            IEnumerable<Course> courses;
+            var usr = await GetCurrentUserAsync();
 
-            if (courses.Any())
+            if (User.IsInRole("Admin"))
             {
-                /*foreach(var course in courses)
-                {
-                    model.listCourse.Add(course);
-                }*/
-                ViewBag.courses = courses;
-                return View();
+                courses = from c in _context.Course select c;
             }
             else
             {
-                return View();
+                courses = _context.Course.Where(c => c.CreatorId == usr.Id);
             }
+            ViewBag.courses = courses;
+            return View();
         }
 
         // POST: Exam/CreateExam
